@@ -1,0 +1,6 @@
+{
+  "name": "Zaphire Decor",
+  "description": "Sacramento wedding coordinating, event planning, luxury decor, customized products, and apparel designed to make your special moments unforgettable.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
