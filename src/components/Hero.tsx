@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, ArrowRight, CheckCircle2, ChevronDown } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Calendar, ArrowRight, CheckCircle2, ChevronDown, Volume2, VolumeX } from 'lucide-react';
 
 interface HeroProps {
   onPlanEvent: () => void;
@@ -7,22 +7,71 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onPlanEvent, onExploreServices }) => {
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      const nextMuted = !videoRef.current.muted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+      if (!nextMuted) {
+        videoRef.current.play().catch(() => {});
+      }
+    }
+  };
+
   return (
     <section
       id="home"
       className="relative min-h-screen pt-32 pb-20 flex items-center justify-center overflow-hidden bg-[#081021]"
     >
-      {/* Editorial Event Setup Background Image with Sophisticated Dark Vignette */}
+      {/* Background Video with Sophisticated Dark Vignette Overlay */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <img
-          src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=85&w=2400"
-          alt="Luxury wedding reception and elegant event decor background"
-          className="w-full h-full object-cover object-center scale-105 transform"
-        />
-        {/* Darkened overlay ensuring the background picture is clearly visible while text remains high contrast */}
-        <div className="absolute inset-0 bg-[#081021]/70"></div>
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted={isMuted}
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover object-center scale-105"
+        >
+          <source
+            src="https://twoaw6r9ig10iipp.public.blob.vercel-storage.com/Create_video_for_Zaphire_Decor_202609042200.mp4"
+            type="video/mp4"
+          />
+        </video>
+        {/* Darkened overlay ensuring the background video is clearly visible while text remains crisp & legible */}
+        <div className="absolute inset-0 bg-[#081021]/60"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#081021]/80 via-transparent to-[#081021]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(8,16,33,0.3)_0%,rgba(8,16,33,0.85)_100%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(8,16,33,0.2)_0%,rgba(8,16,33,0.75)_100%)]"></div>
+      </div>
+
+      {/* Floating Audio Mute/Unmute Toggle Button */}
+      <div className="absolute bottom-24 sm:bottom-8 right-6 sm:right-10 z-20">
+        <button
+          onClick={toggleMute}
+          aria-label={isMuted ? 'Unmute background video' : 'Mute background video'}
+          className="flex items-center space-x-2 px-3.5 py-2.5 bg-[#0A192F]/90 hover:bg-[#112240] text-white border border-white/15 hover:border-[#D4AF37]/70 shadow-2xl backdrop-blur-md transition-all duration-200 cursor-pointer group"
+          title={isMuted ? 'Click to enable audio' : 'Click to mute audio'}
+        >
+          {isMuted ? (
+            <>
+              <VolumeX className="w-4 h-4 text-white/70 group-hover:text-[#D4AF37] transition-colors" />
+              <span className="text-[10px] uppercase tracking-[0.2em] font-medium text-white/80 group-hover:text-white transition-colors">
+                Sound Off
+              </span>
+            </>
+          ) : (
+            <>
+              <Volume2 className="w-4 h-4 text-[#D4AF37] animate-pulse" />
+              <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#D4AF37]">
+                Sound On
+              </span>
+            </>
+          )}
+        </button>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
